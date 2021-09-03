@@ -11,13 +11,13 @@ generator client {
   previewFeatures = ["mongodb"]
 }
 
-model User {
+model users {
   id String @id @default(dbgenerated()) @map("_id") @db.ObjectId
   email String
   password String
 }
 
-model Report {
+model reports {
   id String @id @default(dbgenerated()) @map("_id") @db.ObjectId
   price Int
 }
