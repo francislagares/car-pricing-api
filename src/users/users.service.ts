@@ -10,6 +10,14 @@ export class UsersService {
     return await this.prisma.users.findMany();
   }
 
+  async getUserById(id: string) {
+    return await this.prisma.users.findUnique({
+      where: {
+        id: id,
+      },
+    });
+  }
+
   async createUser(createUserDto: CreateUserDto) {
     const { email, password } = createUserDto;
 
