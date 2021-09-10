@@ -30,4 +30,19 @@ export class UsersService {
 
     return user;
   }
+
+  async updateUser(id: string, createUserDto: CreateUserDto) {
+    const user = await this.getUserById(id);
+
+    if (!user) {
+      throw new Error('user not found!');
+    }
+
+    await this.prisma.users.update({
+      where: { id: id },
+      data: createUserDto,
+    });
+
+    return user;
+  }
 }
