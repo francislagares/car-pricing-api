@@ -1,8 +1,18 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 
 @Controller('/auth')
+@ApiTags('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
@@ -27,5 +37,10 @@ export class UsersController {
     @Body() createUserDto: CreateUserDto,
   ) {
     return this.usersService.updateUser(id, createUserDto);
+  }
+
+  @Delete('/users/:id')
+  async deleteUser(@Param('id') id: string) {
+    return this.usersService.deleteUser(id);
   }
 }
