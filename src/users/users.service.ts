@@ -1,19 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { FilterUserDto } from './dto/filter-user.dto';
 
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async getUsers() {
-    return await this.prisma.users.findMany();
+  async getUsers(filterUserDto: FilterUserDto) {
+    const { email } = filterUserDto;
+    return await this.prisma.users.findMany({
+      where: {
+        email,
+      },
+    });
   }
 
   async getUserById(id: string) {
     return await this.prisma.users.findUnique({
       where: {
-        id: id,
+        id,
       },
     });
   }
@@ -39,7 +45,7 @@ export class UsersService {
     }
 
     await this.prisma.users.update({
-      where: { id: id },
+      where: { id },
       data: createUserDto,
     });
 
@@ -55,7 +61,7 @@ export class UsersService {
 
     await this.prisma.users.delete({
       where: {
-        id: id,
+        id,
       },
     });
   }

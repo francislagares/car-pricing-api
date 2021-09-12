@@ -6,19 +6,19 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
+import { FilterUserDto } from './dto/filter-user.dto';
 import { UsersService } from './users.service';
 
 @Controller('/auth')
-@ApiTags('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Get('/users')
-  async getUsers() {
-    return await this.usersService.getUsers();
+  async getUsers(@Query() filterUserDto: FilterUserDto) {
+    return await this.usersService.getUsers(filterUserDto);
   }
 
   @Get('/users/:id')
