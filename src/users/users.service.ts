@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { FilterUserDto } from './dto/filter-user.dto';
@@ -41,7 +41,7 @@ export class UsersService {
     const user = await this.getUserById(id);
 
     if (!user) {
-      throw new Error('user not found!');
+      throw new NotFoundException('user not found!');
     }
 
     await this.prisma.users.update({
@@ -56,7 +56,7 @@ export class UsersService {
     const user = await this.getUserById(id);
 
     if (!user) {
-      throw new Error('user not found!');
+      throw new NotFoundException('user not found!');
     }
 
     await this.prisma.users.delete({
