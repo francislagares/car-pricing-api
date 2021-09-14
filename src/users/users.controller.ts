@@ -10,7 +10,8 @@ import {
   Query,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { FilterUserDto } from './dto/filter-user.dto';
+import { GetUsersFilterDto } from './dto/get-users-filter.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
 
 @Controller('/auth')
@@ -18,8 +19,8 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Get('/users')
-  async getUsers(@Query() filterUserDto: FilterUserDto) {
-    return await this.usersService.getUsers(filterUserDto);
+  async getUsers(@Query() filterUsersDto: GetUsersFilterDto) {
+    return await this.usersService.getUsers(filterUsersDto);
   }
 
   @Get('/users/:id')
@@ -41,9 +42,9 @@ export class UsersController {
   @Patch('/users/:id')
   async updateUser(
     @Param('id') id: string,
-    @Body() createUserDto: CreateUserDto,
+    @Body() updateUserDto: UpdateUserDto,
   ) {
-    return this.usersService.updateUser(id, createUserDto);
+    return this.usersService.updateUser(id, updateUserDto);
   }
 
   @Delete('/users/:id')

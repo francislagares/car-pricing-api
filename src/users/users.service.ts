@@ -1,14 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { FilterUserDto } from './dto/filter-user.dto';
+import { GetUsersFilterDto } from './dto/get-users-filter.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async getUsers(filterUserDto: FilterUserDto) {
-    const { email } = filterUserDto;
+  async getUsers(filterUsersDto: GetUsersFilterDto) {
+    const { email } = filterUsersDto;
     return await this.prisma.users.findMany({
       where: {
         email,
@@ -37,7 +38,7 @@ export class UsersService {
     return user;
   }
 
-  async updateUser(id: string, createUserDto: CreateUserDto) {
+  async updateUser(id: string, updateUserDto: UpdateUserDto) {
     const user = await this.getUserById(id);
 
     if (!user) {
@@ -46,7 +47,7 @@ export class UsersService {
 
     await this.prisma.users.update({
       where: { id },
-      data: createUserDto,
+      data: updateUserDto,
     });
 
     return user;
