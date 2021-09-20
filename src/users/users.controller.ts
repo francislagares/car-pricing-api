@@ -8,16 +8,16 @@ import {
   Patch,
   Post,
   Query,
-  UseInterceptors,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { GetUsersFilterDto } from './dto/get-users-filter.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
-import { SerializeInterceptor } from 'src/interceptors/serialize.interceptor';
+import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { UserDto } from 'src/users/dto/user.dto';
 
 @Controller('/auth')
+@Serialize(UserDto)
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
@@ -26,7 +26,6 @@ export class UsersController {
     return await this.usersService.getUsers(filterUsersDto);
   }
 
-  @UseInterceptors(new SerializeInterceptor(UserDto))
   @Get('/users/:id')
   async getUserById(@Param('id') id: string) {
     const user = await this.usersService.getUserById(id);
