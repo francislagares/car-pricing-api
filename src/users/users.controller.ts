@@ -15,11 +15,15 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { UserDto } from 'src/users/dto/user.dto';
+import { AuthService } from './auth.service';
 
 @Controller('/auth')
 @Serialize(UserDto)
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private authService: AuthService,
+  ) {}
 
   @Get('/users')
   async getUsers(@Query() filterUsersDto: GetUsersFilterDto) {
@@ -39,7 +43,7 @@ export class UsersController {
 
   @Post('/signup')
   async createUser(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.createUser(createUserDto);
+    return this.authService.signup(createUserDto);
   }
 
   @Patch('/users/:id')
