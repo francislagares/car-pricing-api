@@ -46,6 +46,11 @@ export class UsersController {
     return this.authService.signup(authUserDto);
   }
 
+  @Post('/signin')
+  async signin(@Body() authUserDto: AuthUserDto) {
+    return this.authService.signin(authUserDto);
+  }
+
   @Patch('/users/:id')
   async updateUser(
     @Param('id') id: string,
