@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+import { AuthUserDto } from './dto/auth-user.dto';
 import { UsersService } from './users.service';
 import { randomBytes, scrypt as _scrypt } from 'crypto';
 import { promisify } from 'util';
@@ -10,9 +10,9 @@ const scrypt = promisify(_scrypt);
 export class AuthService {
   constructor(private usersService: UsersService) {}
 
-  async signup(createUserDto: CreateUserDto) {
+  async signup(authUserDto: AuthUserDto) {
     // Check if email exists
-    const { email } = createUserDto;
+    const { email } = authUserDto;
     const users = await this.usersService.getUsers({ email });
     if (users.length) {
       throw new BadRequestException('Email in use');
@@ -29,10 +29,10 @@ export class AuthService {
     const hashedPassword = salt + '.' + hash.toString('hex');
 
     // Assign new hashed password to password
-    createUserDto.password = hashedPassword;
+    authUserDto.password = hashedPassword;
 
     // Create new user and save it
-    const user = this.usersService.createUser(createUserDto);
+    const user = this.usersService.createUser(authUserDto);
 
     // Return the user created
     return user;

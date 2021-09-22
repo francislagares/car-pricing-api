@@ -9,7 +9,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+import { AuthUserDto } from './dto/auth-user.dto';
 import { GetUsersFilterDto } from './dto/get-users-filter.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
@@ -42,8 +42,8 @@ export class UsersController {
   }
 
   @Post('/signup')
-  async createUser(@Body() createUserDto: CreateUserDto) {
-    return this.authService.signup(createUserDto);
+  async createUser(@Body() authUserDto: AuthUserDto) {
+    return this.authService.signup(authUserDto);
   }
 
   @Patch('/users/:id')
