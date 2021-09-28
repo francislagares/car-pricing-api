@@ -63,6 +63,11 @@ export class UsersController {
     return user;
   }
 
+  @Post('/signout')
+  async SignOut(@Session() session: any) {
+    return (session.userId = null);
+  }
+
   @Patch('/users/:id')
   async updateUser(
     @Param('id') id: string,
