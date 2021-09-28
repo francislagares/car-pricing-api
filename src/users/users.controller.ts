@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Query,
+  Session,
 } from '@nestjs/common';
 import { AuthUserDto } from './dto/auth-user.dto';
 import { GetUsersFilterDto } from './dto/get-users-filter.dto';
@@ -24,6 +25,11 @@ export class UsersController {
     private usersService: UsersService,
     private authService: AuthService,
   ) {}
+
+  @Get('/whoami')
+  WhoAmI(@Session() session: any) {
+    return this.usersService.getUserById(session.userId);
+  }
 
   @Get('/users')
   async getUsers(@Query() filterUsersDto: GetUsersFilterDto) {
@@ -42,13 +48,19 @@ export class UsersController {
   }
 
   @Post('/signup')
-  async createUser(@Body() authUserDto: AuthUserDto) {
-    return this.authService.signup(authUserDto);
+  async createUser(@Body() authUserDto: AuthUserDto, @Session() session: any) {
+    const user = await this.authService.signup(authUserDto);
+    session.userId = user.id;
+
+    return user;
   }
 
   @Post('/signin')
-  async signin(@Body() authUserDto: AuthUserDto) {
-    return this.authService.signin(authUserDto);
+  async signin(@Body() authUserDto: AuthUserDto, @Session() session: any) {
+    const user = await this.authService.signin(authUserDto);
+    session.userId = user.id;
+
+    return user;
   }
 
   @Patch('/users/:id')
