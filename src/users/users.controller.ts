@@ -9,6 +9,7 @@ import {
   Post,
   Query,
   Session,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthUserDto } from './dto/auth-user.dto';
 import { GetUsersFilterDto } from './dto/get-users-filter.dto';
@@ -19,6 +20,7 @@ import { UserDto } from 'src/users/dto/user.dto';
 import { AuthService } from './auth.service';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { users } from '.prisma/client';
+import { AuthGuard } from 'src/guards/auth.guard';
 
 @Controller('/auth')
 @Serialize(UserDto)
@@ -29,6 +31,7 @@ export class UsersController {
   ) {}
 
   @Get('/whomami')
+  @UseGuards(AuthGuard)
   WhoAmI(@CurrentUser() user: users) {
     return user;
   }
