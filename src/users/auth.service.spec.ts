@@ -1,25 +1,62 @@
+import { users } from '.prisma/client';
 import { Test } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { UsersService } from './users.service';
 
-it('can create an auth service instance', async () => {
-  const fakeUsersService = {
-    find: () => Promise.resolve([]),
-    create: (email: string, password: string) =>
-      Promise.resolve({ id: 1, email, password }),
+describe('AuthService', () => {
+  let service: AuthService;
+  let fakeUsersService: Partial<UsersService>;
+
+  const mockUser = {
+    email: 'asdf@asdf.com',
+    password: 'password',
   };
 
-  const module = await Test.createTestingModule({
-    providers: [
-      AuthService,
-      {
-        provide: UsersService,
-        useValue: fakeUsersService,
+  beforeEach(async () => {
+    fakeUsersService = {
+      getUsers: () => Promise.resolve([]),
+      createUser: (mockUser) => {
+        const { email, password } = mockUser;
+
+        return Promise.resolve({ id: '1', email, password } as users);
       },
-    ],
-  }).compile();
+    };
 
-  const service = module.get(AuthService);
+    const module = await Test.createTestingModule({
+      providers: [
+        AuthService,
+        {
+          provide: UsersService,
+          useValue: fakeUsersService,
+        },
+      ],
+    }).compile();
 
-  expect(service).toBeDefined();
+    service = module.get(AuthService);
+  });
+
+  it('can create an auth service instance', async () => {
+    expect(service).toBeDefined();
+  });
+
+  it('creates new user with salted and hashed password', async () => {
+    const user = await service.signup(mockUser);
+
+    expect(user.password).not.toEqual('asdf');
+    const [salt, hash] = user.password.split('.');
+
+    expect(salt).toBeDefined();
+    expect(hash).toBeDefined();
+  });
+
+  it('throws an error if user signs up with email that is in use', async () => {
+    fakeUsersService.getUsers = () =>
+      Promise.resolve([{ id: '1', email: 'a', password: 'a' } as users]);
+
+    try {
+      await service.signup(mockUser);
+    } catch (error) {
+      // done();
+    }
+  });
 });
