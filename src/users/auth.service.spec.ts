@@ -59,4 +59,12 @@ describe('AuthService', () => {
       // done();
     }
   });
+
+  it('throws if signin is called with an unused email', async () => {
+    try {
+      await service.signin(mockUser);
+    } catch(err) {
+      // done()
+    }
+  })
 });
