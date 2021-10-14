@@ -66,5 +66,15 @@ describe('AuthService', () => {
     } catch(err) {
       // done()
     }
-  })
+  });
+
+  it('throws if invalid password is provided', async () => {
+    fakeUsersService.getUsers = () =>
+      Promise.resolve([{ id: '1', email: 'a', password: 'a' } as users]);
+    try {
+      await service.signin(mockUser)
+    } catch(err) {
+
+    }
+  });
 });
